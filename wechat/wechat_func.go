@@ -344,6 +344,7 @@ func (w *Wechat) Send(apiURI string, body io.Reader, call Caller) (err error) {
 		w.Log.Printf("the error:%+v", err)
 		return
 	}
+
 	if !call.IsSuccess() {
 		return call.Error()
 	}
@@ -371,6 +372,7 @@ func (w *Wechat) SendTest(apiURI string, body io.Reader, call Caller) (err error
 	reader := resp.Body.(io.Reader)
 
 	respBody, err := ioutil.ReadAll(reader)
+	w.Log.Printf(string(respBody))
 	w.Log.Printf("the respBody:%s", string(respBody))
 
 	if err = json.NewDecoder(reader).Decode(call); err != nil {

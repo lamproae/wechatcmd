@@ -118,7 +118,6 @@ func NewWechat(logger *log.Logger) *Wechat {
 }
 
 func (w *Wechat) WaitForLogin() (err error) {
-
 	err = w.GetUUID()
 	if err != nil {
 		err = fmt.Errorf("get the uuid failed with error:%v", err)
@@ -147,6 +146,7 @@ func (w *Wechat) waitToLogin(uuid string, tip int) (redirectUri, code string, rt
 	if err != nil {
 		return
 	}
+
 	defer resp.Body.Close()
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -259,6 +259,7 @@ func (w *Wechat) Login() (err error) {
 		return
 	}
 	defer resp.Body.Close()
+
 	reader := resp.Body.(io.Reader)
 	if err = xml.NewDecoder(reader).Decode(w.Request); err != nil {
 		return
@@ -286,6 +287,7 @@ func (w *Wechat) Login() (err error) {
 	if err = w.Send(apiUri, bytes.NewReader(data), newResp); err != nil {
 		return
 	}
+
 	w.Log.Printf("the newResp:%#v", newResp)
 	for _, contact := range newResp.ContactList {
 		w.InitContactList = append(w.InitContactList, contact)
@@ -296,7 +298,6 @@ func (w *Wechat) Login() (err error) {
 	w.SyncKey = newResp.SyncKey
 	w.SyncKeyStr = ""
 	for i, item := range w.SyncKey.List {
-
 		if i == 0 {
 			w.SyncKeyStr = strconv.Itoa(item.Key) + "_" + strconv.Itoa(item.Val)
 			continue

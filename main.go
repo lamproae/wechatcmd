@@ -39,7 +39,7 @@ func main() {
 			return
 		}
 	} else {
-		logFile, err = os.Open(fileName)
+		logFile, err = os.OpenFile(fileName, os.O_TRUNC, 666)
 		if err != nil {
 			logger.Println("打开日志文件失败")
 			return
@@ -78,6 +78,7 @@ func main() {
 		logger.Printf("登陆失败：%v\n", err)
 		return
 	}
+
 	logger.Printf("配置文件:%+v\n", config)
 
 	logger.Println("成功")
@@ -85,9 +86,11 @@ func main() {
 	logger.Println("微信初始化成功...")
 
 	logger.Println("开启状态栏通知...")
+
 	if err := wechat.StatusNotify(); err != nil {
 		return
 	}
+
 	if err := wechat.GetContacts(); err != nil {
 		logger.Fatalf("拉取联系人失败:%v\n", err)
 		return
@@ -120,5 +123,4 @@ func main() {
 	go wechat.MsgDaemon(msgOut)
 
 	layout.Init()
-
 }
